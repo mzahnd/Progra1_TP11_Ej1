@@ -1,0 +1,2 @@
+freopen()
+https://stackoverflow.com/questions/6810947/how-to-fake-user-input-in-c
