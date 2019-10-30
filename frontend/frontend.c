@@ -38,8 +38,13 @@
 
 // Allegro
 #include <allegro5/allegro5.h>
-#include <allegro5/allegro_primitives.h> 
+
 #include <allegro5/allegro_color.h>
+
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+
+#include <allegro5/allegro_primitives.h> 
 
 // This file
 #include "frontend.h"
@@ -52,6 +57,7 @@
 #define COLOR_LED_BORDER    "#000000"
 #define COLOR_LED_OFF       "#0A490A"
 #define COLOR_LED_ON        "#00FF00"
+#define COLOR_TXT_INST      "#000000"
 
 // LEDs position and size in Main Window. Must be float
 // Radius
@@ -88,10 +94,19 @@
 #define LED7_POS_X          LED6_POS_X + SPACE_BTWN_LEDS
 #define LED7_POS_Y          LED0_POS_Y
 
+// Instructions
+// Must be int
+#define SIZE_INSTRUCTIONS       36
+#define PATH_FONT_INSTRUCT  "/fonts/liberation_serif/LiberationSerif-Regular.ttf"
+
 // ====== Prototypes ======
 // Draw LEDs in Main Window
 static void
 draw_leds();
+
+// Print instructions
+static int
+printInstructions(void);
 
 // ====== Functions ======
 
@@ -116,6 +131,18 @@ start_allegro()
     {
         fprintf(stderr, "Primitives Addon could not be initialized.\n");
         fprintf(stderr, "Exiting...\n");
+        return AL_ERR_CODE;
+    }
+
+    if(!al_init_font_addon())
+    {
+        fprintf(stderr, "Fonts Addon could not be initialized.\nExiting...\n");
+        return AL_ERR_CODE;
+    }
+
+    if(!al_init_ttf_addon())
+    {
+        fprintf(stderr, "TTF Fonts could not be initialized.\nExiting...\n");
         return AL_ERR_CODE;
     }
 
@@ -219,4 +246,32 @@ draw_leds()
     al_draw_filled_circle(LED7_POS_X, LED7_POS_Y, SIZE_INT_LED,
                           al_color_html(COLOR_LED_OFF));
 
+}
+
+// Print instructions
+
+static int
+printInstructions(void)
+{
+    ALLEGRO_FONT *instruct_font = NULL;
+    instruct_font = al_load_font(PATH_FONT_INSTRUCT, SIZE_INSTRUCTIONS, 0);
+
+    if(!instruct_font)
+    {
+        fprintf(stderr, "Could not load font.\n");
+        return AL_ERR_CODE;
+    }
+
+    //al_draw_text(intruct_font, COLOR_TXT_INST);
+
+    /*
+    puts(TEXT_COLOR "\nPress a LED number (0 - 7) to turn it on.");
+    puts(TEXT_COLOR "Press \'t\' to toggle all LEDs status.");
+    puts(TEXT_COLOR "Press \'s\' to turn ON all LEDs.");
+    puts(TEXT_COLOR "Press \'c\' to turn OFF all LEDs.");
+    puts(TEXT_COLOR "Press \'q\' to exit.");
+
+     */
+
+    return AL_OK_CODE;
 }
