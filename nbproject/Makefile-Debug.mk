@@ -35,8 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/args/arguments.o \
 	${OBJECTDIR}/frontend/frontend.o \
-	${OBJECTDIR}/keyboard/keyboard_input.o \
+	${OBJECTDIR}/frontend/term.o \
+	${OBJECTDIR}/keyboard/term_keyboard_input.o \
 	${OBJECTDIR}/libs/PortEmul/PortEmul.o \
 	${OBJECTDIR}/libs/termlib.o \
 	${OBJECTDIR}/main.o
@@ -66,15 +68,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/args/arguments.o: args/arguments.c
+	${MKDIR} -p ${OBJECTDIR}/args
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/args/arguments.o args/arguments.c
+
 ${OBJECTDIR}/frontend/frontend.o: frontend/frontend.c
 	${MKDIR} -p ${OBJECTDIR}/frontend
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/frontend/frontend.o frontend/frontend.c
 
-${OBJECTDIR}/keyboard/keyboard_input.o: keyboard/keyboard_input.c
+${OBJECTDIR}/frontend/term.o: frontend/term.c
+	${MKDIR} -p ${OBJECTDIR}/frontend
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/frontend/term.o frontend/term.c
+
+${OBJECTDIR}/keyboard/term_keyboard_input.o: keyboard/term_keyboard_input.c
 	${MKDIR} -p ${OBJECTDIR}/keyboard
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyboard/keyboard_input.o keyboard/keyboard_input.c
+	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyboard/term_keyboard_input.o keyboard/term_keyboard_input.c
 
 ${OBJECTDIR}/libs/PortEmul/PortEmul.o: libs/PortEmul/PortEmul.c
 	${MKDIR} -p ${OBJECTDIR}/libs/PortEmul

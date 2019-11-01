@@ -35,8 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/args/arguments.o \
 	${OBJECTDIR}/frontend/frontend.o \
-	${OBJECTDIR}/keyboard/keyboard_input.o \
+	${OBJECTDIR}/frontend/term.o \
+	${OBJECTDIR}/keyboard/term_keyboard_input.o \
 	${OBJECTDIR}/libs/PortEmul/PortEmul.o \
 	${OBJECTDIR}/libs/termlib.o \
 	${OBJECTDIR}/main.o
@@ -66,15 +68,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/args/arguments.o: args/arguments.c
+	${MKDIR} -p ${OBJECTDIR}/args
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/args/arguments.o args/arguments.c
+
 ${OBJECTDIR}/frontend/frontend.o: frontend/frontend.c
 	${MKDIR} -p ${OBJECTDIR}/frontend
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/frontend/frontend.o frontend/frontend.c
 
-${OBJECTDIR}/keyboard/keyboard_input.o: keyboard/keyboard_input.c
+${OBJECTDIR}/frontend/term.o: frontend/term.c
+	${MKDIR} -p ${OBJECTDIR}/frontend
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/frontend/term.o frontend/term.c
+
+${OBJECTDIR}/keyboard/term_keyboard_input.o: keyboard/term_keyboard_input.c
 	${MKDIR} -p ${OBJECTDIR}/keyboard
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyboard/keyboard_input.o keyboard/keyboard_input.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyboard/term_keyboard_input.o keyboard/term_keyboard_input.c
 
 ${OBJECTDIR}/libs/PortEmul/PortEmul.o: libs/PortEmul/PortEmul.c
 	${MKDIR} -p ${OBJECTDIR}/libs/PortEmul

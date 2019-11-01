@@ -47,6 +47,13 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --terminalg</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --term</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --terminal</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -g</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -8</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -t</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>

@@ -38,17 +38,23 @@
 // Allegro
 #include <allegro5/allegro5.h>
 
+// Verify CLI arguments
+#include "args/arguments.h"
+
 /* 
  * Linux support for keyboard functions for getch and getche and kbhit ansy.sys 
  * Like functions added
  */
 #include "libs/termlib.h"
 
-// Ask the user for a keyboard input
-#include "keyboard/keyboard_input.h"
+// Ask the user for a keyboard input in terminal mode
+#include "keyboard/term_keyboard_input.h"
 
 // Print LEDs status
 #include "frontend/frontend.h"
+
+// Terminal mode
+#include "frontend/term.h"
 
 // ====== Constants and Macros ======
 // OS to compile for
@@ -73,56 +79,67 @@
 #    error "Operative System not defined"
 #endif
 
-// ====== Constants and Macros ======
-
-// ====== Prototypes ======
-
 // ====== Functions ======
 
 // Main
 
 int
-main(void)
+main(int argc, char **argv)
 {
+    uint8_t mode = ERROR;
+    answer_t usrinput;
 
-    //answer_t usrinput;
+    chkArgs(&mode, &argc, argv[1]);
 
-    if(!start_allegro())
+    switch(mode)
     {
-        return (EXIT_FAILURE);
+        case ALLEGRO:
+            if(!start_allegro())
+            {
+                return (EXIT_FAILURE);
+            }
+
+            if(!main_window())
+            {
+                return (EXIT_FAILURE);
+            }
+
+            break;
+
+        case TERMINAL:
+            /* TERMINAL MODE*/
+            // Turn off terminal line buffering
+            changemode(BUFFERED_OFF);
+
+            do
+            {
+                CLRSCREEN;
+
+#ifndef TEST
+                // Print LEDs status
+                printLEDstatus();
+
+                // Print instructions
+                printInstructions();
+#endif
+
+                // Wait for a (correct) keyboard input
+                while(!kbhit() && !kbinput(&usrinput));
+
+
+            } while(usrinput.letter != 'q');
+
+            // Turn on terminal line buffering
+            changemode(BUFFERED_ON);
+
+            break;
+
+        default:
+            puts("Bad argument input.");
+            puts("[--terminal] or [-t] arguments to execute in terminal mode.");
+            puts("[--gui] , [-g] or nothing to execute in gui mode. ");
+            break;
     }
-
-    if(!main_window())
-    {
-        return (EXIT_FAILURE);
-    }
-
-    /* TERMINAL MODE
-// Turn off terminal line buffering
-changemode(BUFFERED_OFF);
-
-
-do
-{
-    CLRSCREEN;
-
-    #ifndef TEST
-    // Print LEDs status
-    printLEDstatus();
-
-    // Print instructions
-    printInstructions();
-    #endif
-
-    // Wait for a (correct) keyboard input
-    while(!kbhit() && !kbinput(&usrinput));
-
-} while(usrinput.letter != 'q');
-
-
-// Turn on terminal line buffering
-changemode(BUFFERED_ON);
-     */
 
     return (EXIT_SUCCESS);
 }

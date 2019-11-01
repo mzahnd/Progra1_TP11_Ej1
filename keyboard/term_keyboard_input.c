@@ -53,7 +53,7 @@
 //#include "fake_library.h"
 
 // This file
-#include "keyboard_input.h"
+#include "term_keyboard_input.h"
 
 // ====== Constants and Macros ======
 #define PORT        'A'
@@ -171,14 +171,14 @@ verifyInput(answer_t *answer, uint8_t *inptChar)
     {
         switch(*inptChar)
         {
-            case 'T':
-            case 't':
             case 'C':
             case 'c':
-            case 'S':
-            case 's':
             case 'Q':
             case 'q':
+            case 'S':
+            case 's':
+            case 'T':
+            case 't':
                 inputstatus = OK;
                 answer -> anstype = 0;
                 answer -> letter = TOLOWER(*inptChar);
@@ -209,11 +209,6 @@ runKBInput(answer_t *usrinput)
     {
         switch(TOLOWER(usrinput -> letter))
         {
-                // Togle LEDs
-            case 't':
-                maskToggle(PORT, 0xFF);
-                break;
-
                 // Clear all LEDs
             case 'c':
                 maskOff(PORT, 0xFF);
@@ -222,6 +217,11 @@ runKBInput(answer_t *usrinput)
                 // Set all LEDs
             case 's':
                 maskOn(PORT, 0xFF);
+                break;
+
+                // Togle LEDs
+            case 't':
+                maskToggle(PORT, 0xFF);
                 break;
 
                 // Quit

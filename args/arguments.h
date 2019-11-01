@@ -17,7 +17,7 @@
 
 /*
  * ============================================================================
- * File:    keyboard_input.h
+ * File:    arguments.h
  * 
  * Author:  Axel N. Cincunegui                        <acincunegui@itba.edu.ar>
  *          Gino Minnucci                               <gminnucci@itba.edu.ar>
@@ -25,51 +25,27 @@
  *
  * Team:    Grupo 3
  * 
- * Created: 21/10/2019, 17:05
+ * Created: 01/11/2019, 09:48
  * 
  * General code description:
- *          Asks the user for an input (from the keyboard) and then verifies if
- *  it's valid or not.
- *   In case the input valid, an answer_t variable is modified with the input,
- *  otherwise, the user is asked again for an input.
+ *          
  * ============================================================================
  */
 
-#ifndef KEYBOARD_INPUT_H
-#    define KEYBOARD_INPUT_H
+#ifndef ARGUMENTS_H
+#    define ARGUMENTS_H
+
 // ====== Constants and Macros ======
-// User input by keyboard
-
-typedef struct
+enum mode
 {
-    /**
-     * @brief Answer type
-     * 
-     * 1: Number
-     * 
-     * 0: Letter
-     */
-    uint8_t anstype;
-
-    union
-    {
-        // @brief Answer is a number
-        uint8_t number;
-
-        // @brief Answer is a letter
-        uint8_t letter;
-    };
-
-} answer_t;
+    ERROR = -1,
+    TERMINAL,
+    ALLEGRO
+};
 
 // ====== Prototypes ======
-// Asks the user for a keyboard input
-
-/*
- * Input: Pointer to struct with the type of answer and the letter/number 
- * Output: void
- */
-uint8_t
-kbinput(answer_t* answer);
-
-#endif /* KEYBOARD_INPUT_H */
+// Verify CLI arguments
+ void
+chkArgs(uint8_t *mode, int *argc, char *string);
+ 
+#endif /* ARGUMENTS_H */
