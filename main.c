@@ -37,7 +37,8 @@
 #include <stdint.h>
 // Allegro
 #include <allegro5/allegro5.h>
-
+#include <allegro5/allegro_audio.h> 
+#include <allegro5/allegro_acodec.h> 
 // Verify CLI arguments
 #include "args/arguments.h"
 
@@ -88,8 +89,15 @@ main(int argc, char **argv)
 {
     uint8_t mode = ERROR;
     answer_t usrinput;
-
+     ALLEGRO_SAMPLE *sample = NULL;
     chkArgs(&mode, &argc, argv[1]);
+    
+    al_install_audio();
+    al_init_acodec_addon();
+    al_reserve_samples(1);
+    
+    sample = al_load_sample("inicio.ogg");
+    al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 
     switch(mode)
     {
