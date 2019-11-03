@@ -183,11 +183,11 @@ start_allegro()
         return AL_ERR_CODE;
     }
 
-    if(!al_init_font_addon())
+    /*if(!al_init_font_addon())
     {
         fprintf(stderr, "Fonts Addon could not be initialized.\nExiting...\n");
         return AL_ERR_CODE;
-    }
+    }*/
 
     if(!al_init_ttf_addon())
     {
