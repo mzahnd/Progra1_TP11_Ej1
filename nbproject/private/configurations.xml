@@ -13,6 +13,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -52,8 +54,8 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" --terminal</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -g</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -8</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -t</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -t</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>

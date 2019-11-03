@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/args/arguments.o \
 	${OBJECTDIR}/frontend/frontend.o \
 	${OBJECTDIR}/frontend/term.o \
+	${OBJECTDIR}/keyboard/keyboard.o \
 	${OBJECTDIR}/keyboard/term_keyboard_input.o \
 	${OBJECTDIR}/libs/PortEmul/PortEmul.o \
 	${OBJECTDIR}/libs/termlib.o \
@@ -82,6 +83,11 @@ ${OBJECTDIR}/frontend/term.o: frontend/term.c
 	${MKDIR} -p ${OBJECTDIR}/frontend
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/frontend/term.o frontend/term.c
+
+${OBJECTDIR}/keyboard/keyboard.o: keyboard/keyboard.c
+	${MKDIR} -p ${OBJECTDIR}/keyboard
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Wall `pkg-config --cflags allegro-5` `pkg-config --cflags allegro_acodec-5` `pkg-config --cflags allegro_audio-5` `pkg-config --cflags allegro_color-5` `pkg-config --cflags allegro_dialog-5` `pkg-config --cflags allegro_font-5` `pkg-config --cflags allegro_image-5` `pkg-config --cflags allegro_main-5` `pkg-config --cflags allegro_memfile-5` `pkg-config --cflags allegro_physfs-5` `pkg-config --cflags allegro_primitives-5` `pkg-config --cflags allegro_ttf-5` `pkg-config --cflags allegro_video-5` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyboard/keyboard.o keyboard/keyboard.c
 
 ${OBJECTDIR}/keyboard/term_keyboard_input.o: keyboard/term_keyboard_input.c
 	${MKDIR} -p ${OBJECTDIR}/keyboard

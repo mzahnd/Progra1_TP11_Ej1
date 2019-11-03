@@ -35,6 +35,7 @@
 // ====== Libreries ======
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 // Allegro
 #include <allegro5/allegro5.h>
@@ -45,6 +46,11 @@
 #include <allegro5/allegro_ttf.h>
 
 #include <allegro5/allegro_primitives.h> 
+
+// Library used to manage the microcontroller ports
+#include "../libs/PortEmul/PortEmul.h"
+
+#include "../keyboard/keyboard.h"
 
 // This file
 #include "frontend.h"
@@ -135,13 +141,21 @@ static const float txt_inst_lku[TXT_INST][2] = {
 };
 
 // ====== Prototypes ======
-// Draw LEDs in Main Window
+// Draw Main display
+static void
+draw_Main();
+
+// Draw LEDs in Main Window.
 static void
 draw_leds();
 
 // Print instructions
 static int
 printInstructions(void);
+
+// Manage Event Queue
+static void
+manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq);
 
 // ====== Functions ======
 
@@ -191,8 +205,10 @@ int
 main_window()
 {
     ALLEGRO_DISPLAY *display = NULL;
-    //ALLEGRO_EVENT_QUEUE *evq = NULL;
+    ALLEGRO_EVENT_QUEUE *evq = NULL;
     //ALLEGRO_TIMER *timer = NULL;
+
+    uint8_t do_exit = false;
 
     // Start display
     display = al_create_display(D_WIDTH, D_HEIGHT);
@@ -205,19 +221,31 @@ main_window()
         return AL_ERR_CODE;
     }
 
+    // Create event queue
+    evq = al_create_event_queue();
+    if(!evq)
+    {
+        fprintf(stderr, "Event queue could not be initialized.\nExiting...\n");
+        return AL_ERR_CODE;
+    }
+
     // Draw display
+    draw_Main();
 
-    // Background
-    al_clear_to_color(al_color_html(MAIN_BKGND_COLOR));
 
-    // LEDs
-    draw_leds();
-
-    // Instructions
-    printInstructions();
+    // Events sources
+    // Display
+    al_register_event_source(evq, al_get_display_event_source(display));
+    // Keyboard
+    al_register_event_source(evq, al_get_keyboard_event_source());
 
     // Show
     al_flip_display();
+
+    while(!do_exit)
+    {
+        manageEvq(&do_exit, evq);
+    }
 
     al_rest(2.0);
     al_shutdown_primitives_addon();
@@ -226,16 +254,30 @@ main_window()
     return AL_OK_CODE;
 }
 
+// Draw Main display
+
+static void
+draw_Main()
+{
+    // Background
+    al_clear_to_color(al_color_html(MAIN_BKGND_COLOR));
+
+    // LEDs
+    draw_leds();
+
+    // Instructions
+    printInstructions();
+}
+
 // Draw LEDs in Main Window
 
 static void
 draw_leds()
 {
     /*
-     * 1.- LED border
-     * 2.- Inside of the LED
+     * 1.- Draw LED border
+     * 2.- Draw inside of the LED
      */
-
 
     /*
      * @brief Look Up Table for LEDs position and colors
@@ -251,24 +293,35 @@ draw_leds()
      * leds_lku[i][4] = LED border thikness
      * 
      * leds_lku[i][5] = LED i border color
-     * 
-     * leds_lku[i][6] = LED i OFF color
-     * 
-     * leds_lku[i][7] = LED i ON color
      */
 
     uint16_t i;
-    for(i = 0; i < LEDS; i++)
+    const int8_t port = 'A';
+    uint8_t bit = 0;
+    char * ld_color[] = {LED_COLOR_OFF};
+
+    for(i = 0, bit = 0; i < LEDS; i++, bit++)
     {
         // Border
 
         al_draw_circle(leds_lku[i][0], leds_lku[i][1], leds_lku[i][2],
                        al_color_html(LED_COLOR_BORDER), leds_lku[i][4]);
 
+        if(bitGet(port, bit))
+        {
+            *ld_color = LED_COLOR_ON;
+        }
+
+        else
+        {
+            *ld_color = LED_COLOR_OFF;
+        }
+
+
         // LED
 
         al_draw_filled_circle(leds_lku[i][0], leds_lku[i][1], leds_lku[i][3],
-                              al_color_html(LED_COLOR_OFF));
+                              al_color_html(*ld_color));
 
     }
 }
@@ -312,4 +365,48 @@ printInstructions(void)
                  "Press \'q\' to exit.");
 
     return AL_OK_CODE;
+}
+
+// Manage Event Queue
+
+static void
+manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq)
+{
+    ALLEGRO_EVENT event;
+    uint8_t redraw = false;
+
+    if(al_get_next_event(evq, &event))
+    {
+        switch(event.type)
+        {
+                // Close Window
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                *do_exit = true;
+                break;
+
+                // Keyboard Events
+            case ALLEGRO_EVENT_KEY_DOWN:
+                al_kbinput(&event, ALLEGRO_EVENT_KEY_DOWN, &redraw, do_exit);
+                break;
+
+            case ALLEGRO_EVENT_KEY_UP:
+                al_kbinput(&event, ALLEGRO_EVENT_KEY_UP, &redraw, do_exit);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    // Redraw display
+    if(redraw)
+    {
+        redraw = false;
+
+        // Draw Main display
+        draw_Main();
+
+        // Show
+        al_flip_display();
+    }
 }

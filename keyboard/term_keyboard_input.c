@@ -201,7 +201,7 @@ runKBInput(answer_t *usrinput)
     // Numbers
     if(usrinput -> anstype == 1)
     {
-        bitSet(PORT, usrinput -> number);
+        bitToggle(PORT, usrinput -> number);
     }
 
         // Letters

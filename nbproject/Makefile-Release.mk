@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/args/arguments.o \
 	${OBJECTDIR}/frontend/frontend.o \
 	${OBJECTDIR}/frontend/term.o \
+	${OBJECTDIR}/keyboard/keyboard.o \
 	${OBJECTDIR}/keyboard/term_keyboard_input.o \
 	${OBJECTDIR}/libs/PortEmul/PortEmul.o \
 	${OBJECTDIR}/libs/termlib.o \
@@ -82,6 +83,11 @@ ${OBJECTDIR}/frontend/term.o: frontend/term.c
 	${MKDIR} -p ${OBJECTDIR}/frontend
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/frontend/term.o frontend/term.c
+
+${OBJECTDIR}/keyboard/keyboard.o: keyboard/keyboard.c
+	${MKDIR} -p ${OBJECTDIR}/keyboard
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyboard/keyboard.o keyboard/keyboard.c
 
 ${OBJECTDIR}/keyboard/term_keyboard_input.o: keyboard/term_keyboard_input.c
 	${MKDIR} -p ${OBJECTDIR}/keyboard
