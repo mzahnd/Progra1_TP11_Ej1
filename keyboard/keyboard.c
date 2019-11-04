@@ -42,54 +42,57 @@
 
 // Allegro
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_audio.h> 
-#include <allegro5/allegro_acodec.h> 
+
+// Audio managment
+#include "../audio/auidomgmt.h"
+
+// Frontend
+#include "../frontend/frontend.h"
 
 // This File
 #include "keyboard.h"
 
+// ====== Constants and Macros ======
+#define PORT    'A'
+
+// ====== Functions ======
+
+// Manage keyboard input when using GUI mode
+
 void
-al_kbinput(ALLEGRO_EVENT *event, const uint8_t type,
-           uint8_t *keyok, uint8_t *do_exit)
+al_kbinput(ALLEGRO_EVENT *event, const uint8_t type, uint8_t *do_exit)
 {
-    /*Declaro variables
+    /*
+     * Declaro variables
      */
+    // B key status
     static uint8_t b_pressed = false;
-    static ALLEGRO_SAMPLE *sample = NULL;
-    const uint8_t port = 'A';
-
-    /*Instalo e inicio funciones de Allegro
-     */
-    al_install_audio();
-    al_init_acodec_addon();
-    al_reserve_samples(1);
-    al_install_keyboard();
-
 
     if(type == ALLEGRO_EVENT_KEY_UP)
     {
         switch(event -> keyboard.keycode)
         {
             case ALLEGRO_KEY_B:
-                /*si presiona la tecla B, se inicia o se termina el parpadeo
-                 * del led
+                /* Si presiona la tecla B, se inicia o se termina el parpadeo
+                 * de los LED
                  */
-                // Not Working
                 if(b_pressed)
                 {
-                    sample = al_load_sample("blinkoon.ogg");
-                    al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                    playAudio("audio/blinkoff.ogg");
+
                     b_pressed = false;
+                    // Change Blinking status
+                    ledBlink(true);
                 }
 
                 else
                 {
-                    //sample = al_load_sample("blinkoff.ogg");
-                    //al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                    playAudio("audio/blinkon.ogg");
                     b_pressed = true;
-                }
+                    // Change Blinking status
+                    ledBlink(true);
 
-                *keyok = true;
+                }
                 break;
             default:
                 break;
@@ -100,92 +103,85 @@ al_kbinput(ALLEGRO_EVENT *event, const uint8_t type,
     {
         switch(event -> keyboard.keycode)
         {
-                /*si se presiona la m se reproduce un audio en honor a martin */
+                // Si se presiona la m se reproduce un audio en honor a Martín
             case ALLEGRO_KEY_M:
-                sample = al_load_sample("martin.ogg");
-                al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                playAudio("audio/martin.ogg");
                 break;
-                /*Si se preciona la k se reproduce un audio en honor a la señora 
-                 * de los chanchos.
+
+                /* Si se presiona la K se reproduce un audio en honor a la 
+                 * señora de los chanchos.
                  */
             case ALLEGRO_KEY_K:
-                sample = al_load_sample("chancha.ogg");
-                al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                playAudio("audio/chancha.ogg");
                 break;
-                /*presione Q para salir*/
+
+                /*Presione Q para salir*/
             case ALLEGRO_KEY_Q:
-                sample = al_load_sample("out.ogg");
-                al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                playAudio("audio/out.ogg");
+                // Time gap to play audio
+                al_rest(1.0);
                 *do_exit = true;
                 break;
 
-                /*presione T para invertir los estados de los leds*/
+                /*Presione T para invertir los estados de los leds*/
             case ALLEGRO_KEY_T:
-                sample = al_load_sample("ledinvert.ogg");
-                al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                maskToggle(port, 0xFF);
-                *keyok = true;
-                break;
-                /*presione c para apagar los leds seleccionados*/
-            case ALLEGRO_KEY_C:
-                sample = al_load_sample("ledoff.ogg");
-                al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                maskOff(port, 0xFF);
-                *keyok = true;
-                break;
-                /*presione S para encender los leds seleccionados*/
-            case ALLEGRO_KEY_S:
-                sample = al_load_sample("ledon.ogg");
-                al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                maskOn(port, 0xFF);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 0*/
-            case ALLEGRO_KEY_0:
-                bitToggle(port, 0);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 1*/
-            case ALLEGRO_KEY_1:
-                bitToggle(port, 1);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 2*/
-            case ALLEGRO_KEY_2:
-                bitToggle(port, 2);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 3*/
-            case ALLEGRO_KEY_3:
-                bitToggle(port, 3);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 4*/
-            case ALLEGRO_KEY_4:
-                bitToggle(port, 4);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 5*/
-            case ALLEGRO_KEY_5:
-                bitToggle(port, 5);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 6*/
-            case ALLEGRO_KEY_6:
-                bitToggle(port, 6);
-                *keyok = true;
-                break;
-                /*precione cero para invertir el estado actual del bit 7*/
-            case ALLEGRO_KEY_7:
-                bitToggle(port, 7);
-                *keyok = true;
+                playAudio("audio/ledinvert.ogg");
+                maskToggle(PORT, 0xFF);
                 break;
 
+                /*Presione C para apagar todos los leds*/
+            case ALLEGRO_KEY_C:
+                playAudio("audio/ledoff.ogg");
+                maskOff(PORT, 0xFF);
+                break;
+
+                /*Presione S para encender todos los leds*/
+            case ALLEGRO_KEY_S:
+                playAudio("audio/ledon.ogg");
+                maskOn(PORT, 0xFF);
+                break;
+
+                /*Presione un numero para invertir el estado de dicho bit*/
+            case ALLEGRO_KEY_0:
+                bitToggle(PORT, 0);
+                break;
+
+            case ALLEGRO_KEY_1:
+                bitToggle(PORT, 1);
+                break;
+
+            case ALLEGRO_KEY_2:
+                bitToggle(PORT, 2);
+                break;
+
+            case ALLEGRO_KEY_3:
+                bitToggle(PORT, 3);
+                break;
+
+            case ALLEGRO_KEY_4:
+                bitToggle(PORT, 4);
+                break;
+
+            case ALLEGRO_KEY_5:
+                bitToggle(PORT, 5);
+                break;
+
+            case ALLEGRO_KEY_6:
+                bitToggle(PORT, 6);
+                break;
+
+            case ALLEGRO_KEY_7:
+                bitToggle(PORT, 7);
+                break;
+
+                // Invalid key pressed
             default:
+                // Do nothing
                 break;
         }
     }
 
+        // Just in case
     else
     {
         fprintf(stderr, "Bad call of al_kbinput.\n");

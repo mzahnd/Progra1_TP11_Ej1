@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=audio_ejer1
+PROJECTNAME=Progra1_TP11_Ej1
 
 # Active Configuration
 DEFAULTCONF=Debug

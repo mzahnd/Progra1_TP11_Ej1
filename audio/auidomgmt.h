@@ -17,7 +17,7 @@
 
 /*
  * ============================================================================
- * File:    keyboard.h
+ * File:    auidomgmt.h
  * 
  * Author:  Axel N. Cincunegui                        <acincunegui@itba.edu.ar>
  *          Gino Minnucci                               <gminnucci@itba.edu.ar>
@@ -25,20 +25,27 @@
  *
  * Team:    Grupo 3
  * 
- * Created: 03/11/2019, 17:03
+ * Created: 03/11/2019, 22:37
  * 
  * General code description:
  *          
  * ============================================================================
  */
 
-#ifndef KEYBOARD_H
-#    define KEYBOARD_H
-// ====== Constants and Macros ======
+#ifndef AUIDOMGMT_H
+#    define AUIDOMGMT_H
 
 // ====== Prototypes ======
-// Manage keyboard events
+// Play given audio
 void
-al_kbinput(ALLEGRO_EVENT *event, const uint8_t type, uint8_t *do_exit);
+playAudio(const char *audio);
 
-#endif /* KEYBOARD_H */
+// Destroy audio sample
+void
+destroySample();
+
+// Start audio system
+void
+startAudio(uint8_t *status);
+
+#endif /* AUIDOMGMT_H */

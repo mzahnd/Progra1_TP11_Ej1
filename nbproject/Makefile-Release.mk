@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/args/arguments.o \
+	${OBJECTDIR}/audio/auidomgmt.o \
 	${OBJECTDIR}/frontend/frontend.o \
 	${OBJECTDIR}/frontend/term.o \
 	${OBJECTDIR}/keyboard/keyboard.o \
@@ -63,16 +64,21 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/audio_ejer1
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/audio_ejer1: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/audio_ejer1 ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/progra1_tp11_ej1 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/args/arguments.o: args/arguments.c
 	${MKDIR} -p ${OBJECTDIR}/args
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/args/arguments.o args/arguments.c
+
+${OBJECTDIR}/audio/auidomgmt.o: audio/auidomgmt.c
+	${MKDIR} -p ${OBJECTDIR}/audio
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/audio/auidomgmt.o audio/auidomgmt.c
 
 ${OBJECTDIR}/frontend/frontend.o: frontend/frontend.c
 	${MKDIR} -p ${OBJECTDIR}/frontend

@@ -40,6 +40,9 @@
 // Allegro
 #include <allegro5/allegro5.h>
 
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+
 #include <allegro5/allegro_color.h>
 
 #include <allegro5/allegro_font.h>
@@ -50,7 +53,11 @@
 // Library used to manage the microcontroller ports
 #include "../libs/PortEmul/PortEmul.h"
 
+// Keyboard managment
 #include "../keyboard/keyboard.h"
+
+// Audio managment
+#include "../audio/auidomgmt.h"
 
 // This file
 #include "frontend.h"
@@ -69,6 +76,11 @@
 #define LED_COLOR_OFF       "#0A490A"
 #define LED_COLOR_ON        "#00FF00"
 #define TXT_INST_COLOR      "#D7DBDD"
+
+#define FPS                 60.0
+
+// Blink time
+#define BLINK_DELAY         1.0
 
 // LEDs position and size in Main Window. Must be float
 // Radius
@@ -155,7 +167,8 @@ printInstructions(void);
 
 // Manage Event Queue
 static void
-manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq);
+manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq,
+          ALLEGRO_TIMER *generaltimer, ALLEGRO_TIMER *blinktimer);
 
 // ====== Functions ======
 
@@ -164,38 +177,42 @@ manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq);
 int
 start_allegro()
 {
-    if(!al_init())
+    uint8_t status = AL_OK_CODE;
+
+    if(status != AL_ERR_CODE && !al_init())
     {
         fprintf(stderr, "Allegro could not be initialized.\nExiting...\n");
-        return AL_ERR_CODE;
+        status = AL_ERR_CODE;
     }
 
-    if(!al_install_keyboard())
+    if(status != AL_ERR_CODE && !al_install_keyboard())
     {
         fprintf(stderr, "Keyboard could not be initialized.\nExiting...\n");
-        return AL_ERR_CODE;
+        status = AL_ERR_CODE;
     }
 
-    if(!al_init_primitives_addon())
+    if(status != AL_ERR_CODE && !al_init_primitives_addon())
     {
         fprintf(stderr, "Primitives Addon could not be initialized.\n");
         fprintf(stderr, "Exiting...\n");
-        return AL_ERR_CODE;
+        status = AL_ERR_CODE;
     }
 
-    /*if(!al_init_font_addon())
+    if(status != AL_ERR_CODE && !al_init_font_addon())
     {
         fprintf(stderr, "Fonts Addon could not be initialized.\nExiting...\n");
-        return AL_ERR_CODE;
-    }*/
-
-    if(!al_init_ttf_addon())
-    {
-        fprintf(stderr, "TTF Fonts could not be initialized.\nExiting...\n");
-        return AL_ERR_CODE;
+        status = AL_ERR_CODE;
     }
 
-    return AL_OK_CODE;
+    if(status != AL_ERR_CODE && !al_init_ttf_addon())
+    {
+        fprintf(stderr, "TTF Fonts could not be initialized.\nExiting...\n");
+        status = AL_ERR_CODE;
+    }
+
+    startAudio(&status);
+
+    return status;
 }
 
 
@@ -206,7 +223,10 @@ main_window()
 {
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_EVENT_QUEUE *evq = NULL;
-    //ALLEGRO_TIMER *timer = NULL;
+    // Timer for application
+    ALLEGRO_TIMER *timer = NULL;
+    // Timer for Blink
+    ALLEGRO_TIMER *blinktimer = NULL;
 
     uint8_t do_exit = false;
 
@@ -226,28 +246,63 @@ main_window()
     if(!evq)
     {
         fprintf(stderr, "Event queue could not be initialized.\nExiting...\n");
+        al_destroy_display(display);
+        return AL_ERR_CODE;
+    }
+
+    // Create timer
+    timer = al_create_timer(1.0 / FPS);
+    if(!timer)
+    {
+        fprintf(stderr, "Failed to create timer.\nExiting...\n");
+        al_destroy_display(display);
+        al_destroy_event_queue(evq);
+        return AL_ERR_CODE;
+    }
+
+    // Create timer
+    blinktimer = al_create_timer(1.0 / (BLINK_DELAY));
+    if(!blinktimer)
+    {
+        fprintf(stderr, "Failed to create timer.\nExiting...\n");
+        al_destroy_display(display);
+        al_destroy_event_queue(evq);
+        al_destroy_timer(timer);
         return AL_ERR_CODE;
     }
 
     // Draw display
     draw_Main();
 
-
     // Events sources
     // Display
     al_register_event_source(evq, al_get_display_event_source(display));
     // Keyboard
     al_register_event_source(evq, al_get_keyboard_event_source());
+    //Timer
+    al_register_event_source(evq, al_get_timer_event_source(timer));
+    al_register_event_source(evq, al_get_timer_event_source(blinktimer));
 
     // Show
     al_flip_display();
 
+    playAudio("audio/inicio.ogg");
+
+    // Start timers
+    al_start_timer(timer);
+    al_start_timer(blinktimer);
+
     while(!do_exit)
     {
-        manageEvq(&do_exit, evq);
+        manageEvq(&do_exit, evq, timer, blinktimer);
     }
 
-    al_rest(2.0);
+    // Destroy and uninstall everything
+    al_destroy_timer(timer);
+    al_destroy_timer(blinktimer);
+    // Destroy audio sample
+    destroySample();
+    al_destroy_event_queue(evq);
     al_shutdown_primitives_addon();
     al_destroy_display(display);
 
@@ -370,7 +425,8 @@ printInstructions(void)
 // Manage Event Queue
 
 static void
-manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq)
+manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq,
+          ALLEGRO_TIMER *generaltimer, ALLEGRO_TIMER *blinktimer)
 {
     ALLEGRO_EVENT event;
     uint8_t redraw = false;
@@ -386,11 +442,25 @@ manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq)
 
                 // Keyboard Events
             case ALLEGRO_EVENT_KEY_DOWN:
-                al_kbinput(&event, ALLEGRO_EVENT_KEY_DOWN, &redraw, do_exit);
+                al_kbinput(&event, ALLEGRO_EVENT_KEY_DOWN, do_exit);
                 break;
 
             case ALLEGRO_EVENT_KEY_UP:
-                al_kbinput(&event, ALLEGRO_EVENT_KEY_UP, &redraw, do_exit);
+                al_kbinput(&event, ALLEGRO_EVENT_KEY_UP, do_exit);
+                break;
+
+                // Timer tick
+            case ALLEGRO_EVENT_TIMER:
+
+                if(event.timer.source == blinktimer)
+                {
+                    ledBlink(false);
+                }
+
+                if(event.timer.source == generaltimer)
+                {
+                    redraw = true;
+                }
                 break;
 
             default:
@@ -409,4 +479,73 @@ manageEvq(uint8_t *do_exit, ALLEGRO_EVENT_QUEUE *evq)
         // Show
         al_flip_display();
     }
+}
+
+// Change Blinking status or change LEDs satus (if status = active)
+
+void
+ledBlink(uint8_t change)
+{
+    // Status
+    static uint8_t active = false;
+    static uint8_t last = false;
+
+    // Mask for the port
+    static uint8_t mask = 0x00;
+    // Port
+    const uint8_t port = 'A';
+
+    // Setting Blinking
+    switch(change)
+    {
+        case true:
+            if(!active)
+            {
+                int8_t i;
+                // Get current LEDs status
+                for(i = 7; 0 <= i; i--)
+                {
+                    mask += bitGet(port, i);
+                    if(i > 0)
+                    {
+                        mask <<= 1;
+                    }
+                }
+
+                active = true;
+                last = false;
+            }
+
+                // Unsetting Blinking
+            else if(active)
+            {
+                active = false;
+                last = false;
+                // Restore as it was
+                maskOn(port, mask);
+            }
+
+            break;
+        case false:
+
+            // Check if LEDs have to blink
+            if(active && !last)
+            {
+                maskOff(port, mask);
+                last = true;
+            }
+
+                // Check if LEDs have to blink
+            else if(active && last)
+            {
+                maskOn(port, mask);
+                last = false;
+            }
+            break;
+
+        default:
+            break;
+    }
+
+
 }

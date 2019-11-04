@@ -48,4 +48,8 @@ start_allegro();
 int
 main_window();
 
+// Change Blinking status or change LEDs satus (if status = active)
+void
+ledBlink(uint8_t change);
+
 #endif /* FRONTEND_H */
