@@ -17,7 +17,7 @@
 
 /*
  * ============================================================================
- * File:    main.c
+ * File:    keyboard.c
  * 
  * Author:  Axel N. Cincunegui                        <acincunegui@itba.edu.ar>
  *          Gino Minnucci                               <gminnucci@itba.edu.ar>
@@ -28,7 +28,7 @@
  * Created: 02/11/2019, 16:39
  * 
  * General code description:
- *          
+ *          Manages actions when an Allegro Keyboard Event is detected.
  * ============================================================================
  */
 

@@ -7,10 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="ITBA">
-            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/args/arguments.h</file>
-            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/args/arguments.c</file>
-            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/frontend/frontend.c</file>
-            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/main.c</file>
+            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/keyboard/keyboard.c</file>
+            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/libs/PortEmul/PortEmul.c</file>
+            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/audio/auidomgmt.h</file>
+            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/audio/auidomgmt.c</file>
+            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/libs/PortEmul/PortEmul.h</file>
+            <file>file:/home/martin/Documents/Universidad/ITBA/2019%20-%20Segundo%20Cuatrimestre/Programación%201/Practicas/TP11/Progra1_TP11_Ej1/keyboard/keyboard.h</file>
         </group>
     </open-files>
 </project-private>

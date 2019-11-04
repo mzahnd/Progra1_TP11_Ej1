@@ -28,8 +28,8 @@
  * Created: 21/10/2019, 20:19
  * 
  * General code description:
- *          Visual part of the simulator. Everything that the user can see is
- *  here.
+ *          Visual part of the simulator. Everything that the user can see when
+ *  executing from the console is here.
  * ============================================================================
  */
 

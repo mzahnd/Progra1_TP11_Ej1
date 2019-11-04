@@ -28,7 +28,8 @@
  * Created: 29/10/2019, 18:01
  * 
  * General code description:
- *          
+ *          Visual part of the simulator. Everything that the user can see when
+ *  executing from the GUI is handeled here, except for the keyboard and audio.
  * ============================================================================
  */
 

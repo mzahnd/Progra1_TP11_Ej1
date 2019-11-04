@@ -17,7 +17,7 @@
 
 /*
  * ============================================================================
- * File:    audio.c
+ * File:    audiomgmt.c
  * 
  * Author:  Axel N. Cincunegui                        <acincunegui@itba.edu.ar>
  *          Gino Minnucci                               <gminnucci@itba.edu.ar>
@@ -28,7 +28,7 @@
  * Created: 03/11/2019, 22:30
  * 
  * General code description:
- *          
+ *          Control over audio tracks centralized here to make code easier.
  * ============================================================================
  */
 

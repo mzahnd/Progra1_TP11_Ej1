@@ -28,7 +28,7 @@
  * Created: 03/11/2019, 17:03
  * 
  * General code description:
- *          
+ *          Manages actions when an Allegro Keyboard Event is detected.
  * ============================================================================
  */
 

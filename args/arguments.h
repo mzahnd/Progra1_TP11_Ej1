@@ -28,7 +28,7 @@
  * Created: 01/11/2019, 09:48
  * 
  * General code description:
- *          
+ *          Check if any argument was givven and, if so, acts in consequence.
  * ============================================================================
  */
 

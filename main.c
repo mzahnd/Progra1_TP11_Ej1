@@ -28,7 +28,7 @@
  * Created: 29/10/2019, 17:56
  * 
  * General code description:
- *          
+ *          LED simulator with GUI and Terminal version.
  * ============================================================================
  */
 

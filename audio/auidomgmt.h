@@ -28,7 +28,7 @@
  * Created: 03/11/2019, 22:37
  * 
  * General code description:
- *          
+ *          Control over audio tracks centralized here to make code easier.
  * ============================================================================
  */
 
